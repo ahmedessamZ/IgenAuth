@@ -6,12 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UploadFileRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): true
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'file' => 'required|file|mimes:jpg,jpeg,png,gif|max:10240',

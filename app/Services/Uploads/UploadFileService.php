@@ -3,7 +3,6 @@
 namespace App\Services\Uploads;
 
 use App\DTOs\Uploads\UploadFileDTO;
-use App\Models\User;
 use App\Repositories\UploadsRepository;
 
 class UploadFileService

@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Repositories\Interfaces\UploadsRepositoryInterface;
-use Illuminate\Http\UploadedFile;
 
 class UploadsRepository implements UploadsRepositoryInterface
 {
