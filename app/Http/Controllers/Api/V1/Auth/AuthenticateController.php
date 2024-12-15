@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\DTOs\Auth\CheckEmailDTO;
 use App\DTOs\Auth\CheckUserDTO;
 use App\DTOs\Auth\AuthDTO;
 use App\DTOs\Auth\CompleteProfileDto;
@@ -9,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CheckUserRequest;
 use App\Http\Requests\Auth\AuthRequest;
 use App\Http\Requests\Auth\CompleteProfileRequest;
+use App\Http\Requests\Auth\VerifyEmailOtpRequest;
+use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Responses\Api\DataResponse;
@@ -18,6 +21,8 @@ use App\Services\Auth\CompleteProfileService;
 use App\Services\Auth\LoginService;
 use App\Services\Auth\RegisterService;
 use App\Services\Auth\SendOtpService;
+use App\Services\Auth\SentOtpEmailService;
+use App\Services\Auth\VerifyOtpEmailService;
 use App\Services\Auth\VerifyOtpService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as HTTPResponse;
@@ -31,6 +36,8 @@ class AuthenticateController extends Controller
     private LoginService $loginService;
     private RegisterService $registerService;
     private CompleteProfileService $completeProfileService;
+    private SentOtpEmailService $sentOtpEmailService;
+    private VerifyOtpEmailService $verifyOtpEmailService;
 
 
     public function __construct
@@ -40,7 +47,9 @@ class AuthenticateController extends Controller
         VerifyOtpService       $verifyOtpService,
         LoginService           $loginService,
         RegisterService        $registerService,
-        CompleteProfileService $completeProfileService
+        CompleteProfileService $completeProfileService,
+        SentOtpEmailService    $sentOtpEmailService,
+        VerifyOtpEmailService  $verifyOtpEmailService,
     )
     {
         $this->checkUserService = $checkUserService;
@@ -49,6 +58,8 @@ class AuthenticateController extends Controller
         $this->loginService = $loginService;
         $this->registerService = $registerService;
         $this->completeProfileService = $completeProfileService;
+        $this->sentOtpEmailService = $sentOtpEmailService;
+        $this->verifyOtpEmailService = $verifyOtpEmailService;
     }
 
 
@@ -202,6 +213,43 @@ class AuthenticateController extends Controller
         } catch (Throwable $exception) {
             return (new ErrorResponse(
                 'Failed to complete profile.',
+                HTTPResponse::HTTP_INTERNAL_SERVER_ERROR,
+            ))->toJson($exception);
+        }
+    }
+
+    public function sendOtpEmail(VerifyEmailRequest $request): JsonResponse
+    {
+        try {
+            $verifyEmailDto = new CheckEmailDTO($request->only('email'));
+            $otp = $this->sentOtpEmailService->sendEmailOtp($verifyEmailDto);
+
+            return (new DataResponse('OTP sent successfully to Your Email.',
+                ['otp' => $otp]))->toJson();
+
+        } catch (Throwable $exception) {
+            return (new ErrorResponse(
+                'Failed to send OTP.',
+                HTTPResponse::HTTP_INTERNAL_SERVER_ERROR,
+            ))->toJson($exception);
+        }
+    }
+
+    public function verifyEmail(VerifyEmailOtpRequest $request): JsonResponse
+    {
+        try {
+            $verifyEmailDto = new CheckEmailDTO($request->only('otp'));
+            $check = $this->verifyOtpEmailService->verifyEmailOtp($verifyEmailDto);
+
+            if ($check) {
+                return (new DataResponse('Email Verified Successfully',))->toJson();
+            } else {
+                return (new DataResponse('Wrong OTP',))->toJson();
+            }
+
+        } catch (Throwable $exception) {
+            return (new ErrorResponse(
+                'Failed to verify Email.',
                 HTTPResponse::HTTP_INTERNAL_SERVER_ERROR,
             ))->toJson($exception);
         }
