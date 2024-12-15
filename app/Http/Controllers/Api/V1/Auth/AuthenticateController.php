@@ -194,7 +194,7 @@ class AuthenticateController extends Controller
         try {
             $completeProfileDto = new CompleteProfileDto($request->only('name', 'email', 'avatar'));
             $CompleteProfile = $this->completeProfileService->completeProfile($completeProfileDto);
-            return (new DataResponse('registered successfully',
+            return (new DataResponse('Profile completed successfully',
                 [
                     'user' => new UserResource($CompleteProfile),
                 ]

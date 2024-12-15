@@ -73,9 +73,43 @@ class UserRepository  implements UserRepositoryInterface
             'name' => $completeProfileDto->getName(),
             'email' => $completeProfileDto->getEmail(),
             'avatar' => $completeProfileDto->getAvatar(),
+            'status' =>UserStatusEnum::ACTIVE
         ]);
 
         return $updated ? $user->fresh() : null;
     }
 
+    public function getAuthUser()
+    {
+        return auth()->user()->fresh();
+    }
+
+    public function updateProfile($completeProfileDto)
+    {
+        $user = auth()->user();
+
+        $updated = $user->update([
+            'name' => $completeProfileDto->getName(),
+            'email' => $completeProfileDto->getEmail(),
+            'avatar' => $completeProfileDto->getAvatar(),
+            'country_code' => $completeProfileDto->getCountryCode(),
+            'phone' => $completeProfileDto->getPhone(),
+            'status' =>UserStatusEnum::ACTIVE
+        ]);
+
+        return $updated ? $user->fresh() : null;
+    }
+
+    public function deleteUser(): bool
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return false;
+        }
+
+        $user->tokens()->delete();
+        $user->devices()->delete();
+        return $user->delete();
+    }
 }

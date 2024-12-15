@@ -11,4 +11,8 @@ interface UserRepositoryInterface
     public function verifyOtp($user,$otp): bool;
     public function createToken($loginDto, $user): string;
     public function register($registerDto);
+    public function completeProfile($completeProfileDto);
+    public function getAuthUser();
+    public function updateProfile($completeProfileDto);
+    public function deleteUser(): bool;
 }
