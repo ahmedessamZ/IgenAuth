@@ -26,7 +26,7 @@ class ErrorResponse
         }
         return response()->json([
             'message' => $this->message,
-            'errors' => $exception->getMessage(),
+            'errors' => $exception?->getMessage(),
             'status' => $this->status,
         ], $this->status);
     }

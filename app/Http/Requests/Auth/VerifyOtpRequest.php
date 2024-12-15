@@ -14,9 +14,9 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country_code' => 'required|numeric',
-            'phone' => 'required|numeric',
-            'otp' => 'required|numeric',
+            'country_code' => 'required|numeric|max:99999',
+            'phone' => 'required|numeric|max:999999999999999999999999999999',
+            'otp' => 'required|numeric|max:999999',
         ];
     }
 

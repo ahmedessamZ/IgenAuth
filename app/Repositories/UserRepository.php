@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Enums\UserStatusEnum;
 use App\Models\User;
+use App\Models\UserDevice;
 use App\Models\VerificationCode;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserRepository  implements UserRepositoryInterface
 {
@@ -33,4 +36,46 @@ class UserRepository  implements UserRepositoryInterface
             ->first();
         return $currentOtp?->code === $otp && $currentOtp->delete();
     }
+
+    public function createToken($loginDto, $user): string
+    {
+        $token = $user->createToken('auth_token')->plainTextToken;
+        $tokenObject = PersonalAccessToken::findToken($token);
+        UserDevice::query()
+            ->updateOrInsert(
+                [
+                    'device_id' => $loginDto->getDeviceId(),
+                    'user_id' => $user->id,
+                ],
+                [
+                    'token_id' => $tokenObject->id,
+                    'device_type' => $loginDto->getDeviceType(),
+                    'fcm_token' => $loginDto->getFcmToken(),
+                ]
+            );
+        return $token;
+    }
+
+    public function register($registerDto)
+    {
+        return User::query()->create([
+            'country_code' => $registerDto->getCountryCode(),
+            'phone' => $registerDto->getPhone(),
+            'status' => UserStatusEnum::PENDING,
+        ])->fresh();
+    }
+
+    public function completeProfile($completeProfileDto)
+    {
+        $user = auth()->user();
+
+        $updated = $user->update([
+            'name' => $completeProfileDto->getName(),
+            'email' => $completeProfileDto->getEmail(),
+            'avatar' => $completeProfileDto->getAvatar(),
+        ]);
+
+        return $updated ? $user->fresh() : null;
+    }
+
 }

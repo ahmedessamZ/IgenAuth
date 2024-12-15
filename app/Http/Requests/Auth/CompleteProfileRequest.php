@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CheckUserRequest extends FormRequest
+class CompleteProfileRequest extends FormRequest
 {
     public function authorize(): true
     {
@@ -14,9 +14,10 @@ class CheckUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country_code' => 'required|numeric|max:99999',
-            'phone' => 'required|numeric|max:999999999999999999999999999999',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users,email',
+            'avatar' => 'nullable|string|max:255',
         ];
     }
-}
 
+}
