@@ -72,7 +72,6 @@ class UserRepository  implements UserRepositoryInterface
         $updated = $user->update([
             'name' => $completeProfileDto->getName(),
             'email' => $completeProfileDto->getEmail(),
-            'avatar' => $completeProfileDto->getAvatar(),
             'status' =>UserStatusEnum::ACTIVE
         ]);
 
@@ -91,7 +90,6 @@ class UserRepository  implements UserRepositoryInterface
         $updated = $user->update([
             'name' => $completeProfileDto->getName(),
             'email' => $completeProfileDto->getEmail(),
-            'avatar' => $completeProfileDto->getAvatar(),
             'country_code' => $completeProfileDto->getCountryCode(),
             'phone' => $completeProfileDto->getPhone(),
             'status' =>UserStatusEnum::ACTIVE

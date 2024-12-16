@@ -203,7 +203,7 @@ class AuthenticateController extends Controller
     public function completeProfile(CompleteProfileRequest $request): JsonResponse
     {
         try {
-            $completeProfileDto = new CompleteProfileDto($request->only('name', 'email', 'avatar'));
+            $completeProfileDto = new CompleteProfileDto($request->only('name', 'email'));
             $CompleteProfile = $this->completeProfileService->completeProfile($completeProfileDto);
             return (new DataResponse('Profile completed successfully',
                 [

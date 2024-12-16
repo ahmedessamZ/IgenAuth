@@ -24,7 +24,6 @@ class UpdateUserRequest extends FormRequest
                 'email',
                 Rule::unique('users', 'email')->ignore($userId),
             ],
-            'avatar' => 'nullable|string|max:255',
             'country_code' => 'required|numeric|max:99999',
             'phone' => [
                 'required',

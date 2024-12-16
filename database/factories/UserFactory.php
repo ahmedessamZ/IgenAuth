@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Enums\UserStatusEnum;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -30,7 +31,6 @@ class UserFactory extends Factory
             'country_code' => fake()->numberBetween(1, 999),
             'phone' => fake()->numerify('##########'),
             'status' => fake()->randomElement(UserStatusEnum::cases()),
-            'avatar' => fake()->imageUrl(200, 200),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

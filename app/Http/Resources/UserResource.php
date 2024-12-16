@@ -15,7 +15,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone' => "$this->country_code-$this->phone",
             'status' => UserStatusEnum::tryFrom($this->status)->getLabel(),
-            'avatar' => $this->avatar ?? null
+            'avatar' => $this->getFirstMedia('user-avatar') ?? null
         ];
 
         return $data;

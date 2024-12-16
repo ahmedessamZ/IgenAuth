@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('country_code');
             $table->string('phone')->unique();
             $table->integer('status')->nullable();
-            $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();

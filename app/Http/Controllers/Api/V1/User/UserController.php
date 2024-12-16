@@ -56,7 +56,7 @@ class UserController
     public function update(UpdateUserRequest $request): JsonResponse
     {
         try {
-            $updateUserDto = new UpdateUserDTO($request->only('name', 'email', 'avatar', 'country_code', 'phone'));
+            $updateUserDto = new UpdateUserDTO($request->only('name', 'email', 'country_code', 'phone'));
             $updatedUser = $this->updateUserService->execute($updateUserDto);
 
             return (new DataResponse('Profile updated successfully',

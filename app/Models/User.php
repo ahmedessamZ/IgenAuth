@@ -32,7 +32,6 @@ class User extends Authenticatable implements HasMedia
         'country_code',
         'phone',
         'status',
-        'avatar',
         'email_verified_at',
         'remember_token',
         'created_at',

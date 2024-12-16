@@ -8,7 +8,6 @@ class UpdateUserDTO
     public ?string $email;
     public ?string $phone;
     public ?string $country_code;
-    public ?string $avatar;
 
     public function __construct(array $data)
     {
@@ -16,7 +15,6 @@ class UpdateUserDTO
         $this->email = $data['email'];
         $this->phone = $data['phone'];
         $this->country_code = $data['country_code'];
-        $this->avatar = $data['avatar'];
     }
 
     public function getName(): ?string
@@ -36,10 +34,4 @@ class UpdateUserDTO
     {
         return $this->country_code;
     }
-    public function getAvatar(): ?string
-    {
-        return $this->avatar;
-    }
-
-
 }
